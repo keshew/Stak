@@ -1,17 +1,22 @@
-//
-//  StakApp.swift
-//  Stak
-//
-//  Created by Артём Коротков on 01.08.2025.
-//
-
 import SwiftUI
 
 @main
-struct StakApp: App {
+struct GearCareApp: App {
+    @ObservedObject private var soundManager = SoundManager.shared
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if UserDefaultsManager().isFirstLaunch() {
+                GearOnboardingView()
+                    .onAppear() {
+                        soundManager.playBackgroundMusic()
+                    }
+            } else {
+                GearTabBarView()
+                    .onAppear() {
+                        soundManager.playBackgroundMusic()
+                        UserDefaultsManager().recordGameLaunchDate()
+                    }
+            }
         }
     }
-}
+} 
